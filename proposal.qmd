@@ -61,7 +61,7 @@ Variables to be Created:
 
 as we are expecting web scraping here, we might add few new variables as we try to answer the questions
 
-External Data (not anticipated):
+External Data:
 
 This project is expected to have scrapped data from various websites and survey forms  to get a comprehensive view of both student expectations and actual job market trends, which is ideal for a meaningful analysis.
 
