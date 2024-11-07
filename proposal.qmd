@@ -43,8 +43,9 @@ Methodology:
 
 Data Collection:
 
-We will scrape data from popular job listing platforms, including LinkedIn, Indeed, Glassdoor, and Monster, to gather real-time data on job openings, job descriptions, skill requirements, salary ranges, and geographical distribution.
-A survey form will be administered to students to capture their career expectations, including preferred job titles, industries, and locations.
+We will gather real-time job market data from popular platforms, including LinkedIn, Indeed, Glassdoor, and Monster. This data will include job openings, descriptions, required skills, salary ranges, and geographical distribution. For web scraping, we plan to use tools such as rvest for static content and RSelenium for platforms with dynamic or interactive content.
+
+Additionally, a survey will be administered to students to capture their career expectations, including preferred job titles, industries, and locations. This combined approach will allow us to analyze market trends alongside students' aspirations.
 
 Data Analysis:
 
