@@ -1,0 +1,92 @@
+---
+title: "Dream jobs - analysis on the job market in US"
+subtitle: "INFO 526 - Fall 2024 - Project 02: analysis on the job market in US"
+author: 
+  - name: "DreamJobs"
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "The primary goal of this project is to conduct a comprehensive analysis of the U.S. job market, focusing on identifying trends, skills, and career pathways relevant to students graduating from our course. This analysis will provide insights into current job demand, salary expectations, required skills, and industry-specific opportunities, ultimately supporting students in making informed career choices"
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    code-line-numbers: true
+    embed-resources: true
+editor: visual
+code-annotations: hover
+execute:
+  warning: false
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+| Variable           | Class      | Description                                                                                               |
+|--------------------|------------|-----------------------------------------------------------------------------------------------------------|
+| id                 | double     | Job ID                                                                                                    |
+| Job_title          | character  | Title of the job                                                                                          |
+| experience         | character  | The required or preferred years of experience for the job.                                                |
+| Qualifications     | character  | The educational qualifications needed for the job                                                         |
+| Salary Range       | character  | The range of salaries or compensation offered for the position.                                           |
+| Location           | character  | The city or area where the job is located.                                                                |
+| Work Type          | character  | The type of employment (e.g., full-time, part-time, contract)                                             |
+| Job Posting Date   | character  | The date when the job posting was made public                                                             |
+| Preference         | character  | Special preferences or requirements for applicants (e.g., Only Male or Female, remote, hybrid)            |
+| Role               | character  | The role or category of the job (e.g., software developer, marketing manager).                            |
+| Job Portal         | character  | The platform or website where the job was posted.                                                         |
+| Benefits           | character  | Information about benefits offered with the job (e.g., health insurance, retirement plans).               |
+| Skills             | character  | The skills or qualifications required for the job.                                                        |
+| Responsibilities   | character  | Specific responsibilities and duties associated with the job.                                             |
+| Company Name       | character  | The name of the hiring company.                                                                           |
+| Company Profile    | character  | A brief overview of the company's background and mission                                                  |
+
+Methodology:
+
+Data Collection:
+
+We will scrape data from popular job listing platforms, including LinkedIn, Indeed, Glassdoor, and Monster, to gather real-time data on job openings, job descriptions, skill requirements, salary ranges, and geographical distribution.
+A survey form will be administered to students to capture their career expectations, including preferred job titles, industries, and locations.
+
+Data Analysis:
+
+The data will be processed and analyzed to identify key trends and common job requirements in various fields related to the course.
+Machine learning and natural language processing techniques might be employed to extract insights, such as in-demand skills, emerging job roles, and location-based salary expectations.
+
+Expected Outcomes:
+
+A detailed report highlighting job market trends and insights tailored to the expectations and aspirations of graduating students.
+Visualizations and dashboards for easy interpretation of data trends and projections for specific roles and industries.
+Recommendations for students on aligning their skills and experiences with market demands, based on the findings from both scraped data and survey responses.
+
+Variables to be Created:
+
+as we are expecting web scraping here, we might add few new variables as we try to answer the questions
+
+External Data (not anticipated):
+
+This project is expected to have scrapped data from various websites and survey forms  to get a comprehensive view of both student expectations and actual job market trends, which is ideal for a meaningful analysis.
+
+## Condensed Plan of Attack
+
+| Task Name                                          | Status | Assignee         | Due       | Priority | Summary                                                                                                                              |
+|----------------------------------------------------|--------|-------------------|-----------|----------|--------------------------------------------------------------------------------------------------------------------------------------|
+| **Week 1: Project Proposal and Initial Setup**     |        | Whole Team       | Nov 14    | High     | Finalize project proposal, objectives, and data sources. Outline tasks for each team member.                                         |
+| Proposal Finalization                              |        | Megha, Ram       | Nov 16    | High     | Review and incorporate feedback into the project proposal, ensuring clarity on objectives and methods.                               |
+| Research Data Sources and Survey Design            |        | Sohan, Naveen    | Nov 16    | High     | Confirm approach for each job platform. Create survey questions to gather students' expected job titles and career preferences.      |
+
+| **Week 2: Data Collection Begins**                 |        | Whole Team       | Nov 21    | High     | Start collecting data from accessible APIs, aggregators, or scraping tools (if permissible). Distribute the survey to students.     |
+| Survey Distribution and Initial Response Tracking  |        | Megha            | Nov 22    | High     | Distribute survey to students, and monitor response rate to ensure sufficient data for analysis.                                    |
+| Data Collection: Job Platforms                     |        | Sohan, Naveen    | Nov 23    | High     | Implement approved APIs or scraping tools for LinkedIn, Indeed, Monster, and Glassdoor; ensure data is stored securely.             |
+
+| **Week 3: Data Cleaning & Preprocessing**          |        | Whole Team       | Nov 28    | High     | Clean and preprocess data, handling duplicates, missing values, and standardizing attributes (job titles, skills, etc.).            |
+| Survey Data Compilation                            |        | Megha, Ram       | Nov 29    | Medium   | Collect survey responses and prepare data for integration with job market data.                                                     |
+| Data Preprocessing: Job Platform Data              |        | Sohan, Naveen    | Nov 30    | High     | Standardize job titles, handle missing data, and check for consistency across job platform data sources.                            |
+
+| **Week 4: Analysis and Initial Findings**          |        | Whole Team       | Dec 5     | High     | Begin exploratory data analysis to identify job trends, skill requirements, and salary distributions.                               |
+| Exploratory Data Analysis (EDA)                    |        | Sohan, Ram       | Dec 6     | Medium   | Create visualizations for job title frequency, skill requirements, and salary trends.                                               |
+| Survey Data Analysis                               |        | Megha, Naveen    | Dec 7     | Medium   | Analyze survey data for top job titles, skills, and industries desired by students, and identify any gaps with job market data.     |
+
+| **Week 5: Final Analysis and Report Preparation**  |        | Whole Team       | Dec 12    | High     | Synthesize findings, finalize visualizations, and prepare the report and presentation.                                              |
+| Report Drafting and Visualizations                 |        | Megha, Ram       | Dec 13    | High     | Write the report, including background, methodology, findings, and conclusions relevant to students’ job expectations.              |
+| Presentation Preparation                           |        | Sohan, Naveen    | Dec 14    | High     | Create a presentation summarizing key findings, insights, and recommendations.                                                      |
+| Final Review and Adjustments                       |        | Whole Team       | Dec 15    | High     | Conduct a full review, incorporate final edits, and finalize both the report and presentation.                                      |
+
