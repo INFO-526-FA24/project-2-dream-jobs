@@ -74,11 +74,11 @@ This project is expected to have scrapped data from various websites and survey 
 | Research Data Sources and Survey Design            |        | Sohan, Naveen    | Nov 16    | High     | Confirm approach for each job platform. Create survey questions to gather students' expected job titles and career preferences.      |
 
 | **Week 2: Data Collection Begins**                 |        | Whole Team       | Nov 21    | High     | Start collecting data from accessible APIs, aggregators, or scraping tools (if permissible). Distribute the survey to students.     |
-| Survey Distribution and Initial Response Tracking  |        | Megha            | Nov 22    | High     | Distribute survey to students, and monitor response rate to ensure sufficient data for analysis.                                    |
-| Data Collection: Job Platforms                     |        | Sohan, Naveen    | Nov 23    | High     | Implement approved APIs or scraping tools for LinkedIn, Indeed, Monster, and Glassdoor; ensure data is stored securely.             |
+| Survey Distribution and Initial Response Tracking  |        | Sohan            | Nov 22    | High     | Distribute survey to students, and monitor response rate to ensure sufficient data for analysis.                                    |
+| Data Collection: Job Platforms                     |        | Megha, Naveen    | Nov 23    | High     | Implement approved APIs or scraping tools for LinkedIn, Indeed, Monster, and Glassdoor; ensure data is stored securely.             |
 
 | **Week 3: Data Cleaning & Preprocessing**          |        | Whole Team       | Nov 28    | High     | Clean and preprocess data, handling duplicates, missing values, and standardizing attributes (job titles, skills, etc.).            |
-| Survey Data Compilation                            |        | Megha, Ram       | Nov 29    | Medium   | Collect survey responses and prepare data for integration with job market data.                                                     |
+| Survey Data Compilation                            |        | Sohan, Ram       | Nov 29    | Medium   | Collect survey responses and prepare data for integration with job market data.                                                     |
 | Data Preprocessing: Job Platform Data              |        | Sohan, Naveen    | Nov 30    | High     | Standardize job titles, handle missing data, and check for consistency across job platform data sources.                            |
 
 | **Week 4: Analysis and Initial Findings**          |        | Whole Team       | Dec 5     | High     | Begin exploratory data analysis to identify job trends, skill requirements, and salary distributions.                               |
