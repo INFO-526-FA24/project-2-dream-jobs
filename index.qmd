@@ -1,0 +1,200 @@
+---
+title: "Dream jobs - analysis on the job market in US"
+subtitle: "INFO 526 - Fall 2024 - Project 02: analysis on the job market in US"
+author: 
+  - name: "DreamJobs"
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "The primary goal of this project is to conduct a comprehensive analysis of the U.S. job market, focusing on identifying trends, skills, and career pathways relevant to students graduating from our course. This analysis will provide insights into current job demand, salary expectations, required skills, and industry-specific opportunities, ultimately supporting students in making informed career choices"
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    code-line-numbers: true
+    embed-resources: true
+editor: visual
+code-annotations: hover
+execute:
+  warning: false
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+{r}
+#| label: load-library
+#| echo: false
+# Load pacman package
+if (!requireNamespace("pacman", quietly = TRUE)) {
+    install.packages("pacman")  # Install pacman if not already installed
+}
+library(pacman)
+
+# Load necessary packages
+pacman::p_load(ggplot2, dplyr, ggrepel, gganimate, png, magick, ggridges,scales,circlize)
+
+# Your data analysis and plotting code goes here
+
+How do salaries vary by job category across different experience levels?
+
+{r}
+# Loading the dataset
+data <- read.csv("C:/Users/ual-laptop/Documents/data_analysis_and_visualization/project2/data_from_kaggle/updated_data.csv")
+
+# ensuring the salary is in numeric column
+data$salary_in_usd <- as.numeric(data$salary_in_usd)
+
+# Creating the box plot with formatted y-axis
+ggplot(data, aes(x = job_category, y = salary_in_usd, fill = experience_level)) +
+  geom_boxplot() +
+  labs(
+    title = "Salary Distribution by Job category and Experience Level",
+    x = "Job category",
+    y = "Salary (USD)"
+  ) +
+  scale_y_continuous(labels = comma) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+This boxplot illustrates the salary distribution across various job categories and experience levels, revealing key trends. High-paying categories include Data Engineering and Leadership and Management, with these fields showing higher median salaries and broader salary ranges. In contrast, categories like Data Analysis and Cloud and Database tend to have lower median salaries, indicating they are less lucrative. Machine Learning and AI stands out as a high-paying field with wide salary variability, reflecting its growing demand and value. Conversely, Data Quality and Operations has a narrower salary range, suggesting more standardized pay scales. Outliers are evident in several high-paying categories, such as Leadership and Data Engineering, where some employees earn significantly above the norm.
+
+Salaries also vary significantly by experience level. Executive-level roles command the highest salaries across nearly all job categories, followed by Senior-level roles. Entry-level salaries are the lowest, with smaller ranges, reflecting limited variability at the start of a career. Categories like Leadership and Management and Machine Learning and AI display a wide range of salaries across all experience levels, indicating diverse opportunities within these fields. These insights suggest that employees in lower-paying fields, such as Data Analysis, could benefit from upskilling into high-demand areas like Machine Learning or Data Engineering to improve earning potential.
+
+{r}
+#i am defining the salary ranges here
+data <- data %>%
+  mutate(salary_range = cut(
+    salary_in_usd,
+    breaks = c(0, 50000, 100000, 150000, 200000, 300000, 400000, Inf),
+    labels = c("$0–50k", "$50k–100k", "$100k–150k", "$150k–200k", "$200k–300k", "$300k–400k", "$400k+"),
+    include.lowest = TRUE
+  ))
+
+# Creating segmented bar chart
+ggplot(data, aes(x = job_category, fill = experience_level)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ salary_range, scales = "free_x") +
+  labs(
+    title = "Influence of Experience Level on Salaries Across Job Categories",
+    x = "Job Category",
+    y = "Proportion",
+    fill = "Experience Level"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+What are the trends in salaries over the years?
+
+{r}
+# Calculate average salary per year
+average_salary <- data %>%
+  group_by(work_year) %>%
+  summarize(avg_salary = mean(salary_in_usd, na.rm = TRUE))
+
+# Create a line chart
+ggplot(average_salary, aes(x = work_year, y = avg_salary)) +
+  geom_line(color = "blue", size = 1) +
+  geom_point(color = "red", size = 2) +
+  labs(
+    title = "Trends in Average Salaries Over the Years",
+    x = "Year",
+    y = "Average Salary (USD)"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+
+This line chart illustrates the trends in average salaries from 2020 to 2024, showcasing fluctuations over time. The x-axis represents the years, while the y-axis indicates the average salary in USD. Each data point, marked with red dots, highlights the precise salary value for a given year, while the blue line connects these points to reveal the overall trajectory. In 2020, the average salary started at approximately $160,000. However, a sharp decline occurred in 2021, with salaries dropping to around $148,000, marking the lowest point in the observed timeline.
+
+Following this decline, salaries rebounded significantly between 2021 and 2023, peaking again at $160,000 in 2023, reflecting a sharp recovery. However, the trend shows another decline in 2024, although it was less drastic than the drop in 2021. The overall pattern suggests a fluctuation in average salaries, characterized by an initial decline, a recovery period, and a slight downturn in the most recent year. These shifts may reflect broader economic conditions or changes in industry demand over the years.
+
+What are the salary trends by job category for different company sizes?
+
+{r}
+# Aggregate data to calculate average salary by job title and company size
+salary_trends <- data %>%
+  group_by(job_category, company_size) %>%
+  summarise(avg_salary = mean(salary_in_usd, na.rm = TRUE))
+
+# Create multi-line chart
+ggplot(salary_trends, aes(x = job_category, y = avg_salary, color = company_size, group = company_size)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(
+    title = "Salary Trends by Job Category for Different Company Sizes",
+    x = "Job Category",
+    y = "Average Salary (USD)",
+    color = "Company Size"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+This multi-line chart illustrates the trends in average salaries across various job categories, segmented by company sizes: large (L), medium (M), and small (S). The x-axis represents the job categories (e.g., BI and Visualization, Data Analysis, Machine Learning and AI), while the y-axis shows the corresponding average salary in USD. Each line represents a company size, with red for large companies, green for medium-sized companies, and blue for small companies. The chart demonstrates salary variations depending on job type and company size.
+
+From the chart, large companies (red line) tend to offer the highest salaries across most job categories, especially for roles such as Data Architecture and Modeling, and Machine Learning and AI, where salaries exceed $175,000. Medium-sized companies (green line) show more fluctuation, with some roles like Data Engineering and Leadership offering competitive salaries but significantly lower for Data Architecture and Modeling. Small companies (blue line) generally offer lower salaries across all categories, though the trend is more consistent, with roles like Machine Learning and AI and Data Science showing noticeable peaks. The data suggests that large organizations invest more in specialized roles, while smaller companies maintain more uniform salary ranges across categories.
+
+How does the work setting correlate with employee residence and salary levels?
+
+{r}
+# Aggregate data for the chart
+bubble_data <- data %>%
+  group_by(work_setting, employee_residence) %>%
+  summarise(
+    avg_salary = mean(salary_in_usd, na.rm = TRUE),
+    employee_count = n()
+  )
+
+# Create bubble chart
+ggplot(bubble_data, aes(x = work_setting, y = avg_salary, size = employee_count, color = employee_residence)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    title = "Work Setting Correlation with Employee Residence and Salary Levels",
+    x = "Work Setting",
+    y = "Average Salary (USD)",
+    size = "Employee Count",
+    color = "Employee Residence"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(labels = scales::comma)
+
+This bubble chart examines the relationship between work settings, average salary levels, and employee counts for individuals residing in the United States. The x-axis categorizes work settings into Hybrid, In-person, and Remote, while the y-axis represents average salaries in USD. The size of the bubbles corresponds to the number of employees in each category, and the chart color distinguishes data for employees in the United States.
+
+The chart reveals that the In-person work setting has the largest bubble, indicating the highest number of employees, with an average salary of approximately $155,000, the highest among the three categories. The Hybrid work setting, by contrast, has the smallest bubble, representing fewer employees and the lowest average salary at about $140,000. The Remote work setting falls in between, with a medium-sized bubble and salaries that are higher than Hybrid but lower than In-person. These insights suggest that in-person roles tend to offer higher pay, potentially reflecting employer preferences or the nature of jobs requiring on-site presence.
+
+What is the relationship between company location and employee residence for different job roles?
+
+{r}
+library(dplyr)
+library(circlize)
+
+# Identify top 5 job roles
+top_job_roles <- data %>%
+  count(job_title, sort = TRUE) %>%
+  top_n(5, n) %>%
+  pull(job_title)
+
+# Filter data for these job roles
+filtered_data <- data %>%
+  filter(job_title %in% top_job_roles)
+
+# Create a contingency table of company location vs. employee residence
+chord_data <- filtered_data %>%
+  count(company_location, employee_residence) %>%
+  rename(value = n)
+
+# Convert to a matrix for the chord diagram
+chord_matrix <- reshape2::acast(chord_data, company_location ~ employee_residence, value.var = "value", fill = 0)
+
+# Plot the chord diagram
+chordDiagram(chord_matrix, 
+             transparency = 0.5,
+             annotationTrack = "grid",
+             preAllocateTracks = 1)
+
+# Add title
+title("Relationship Between Company Location and Employee Residence for Key Job Roles")
+
