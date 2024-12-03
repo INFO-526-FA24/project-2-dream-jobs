@@ -45,42 +45,51 @@ data <- read.csv("C:/Users/ual-laptop/Documents/data_analysis_and_visualization/
 data$salary_in_usd <- as.numeric(data$salary_in_usd)
 
 # Creating the box plot with formatted y-axis
-ggplot(data, aes(x = job_category, y = salary_in_usd, fill = experience_level)) +
+ggplot(data, aes(x = job_category, y = salary_in_usd, fill = job_category)) +
   geom_boxplot() +
+  facet_wrap(~experience_level) +
   labs(
     title = "Salary Distribution by Job category and Experience Level",
     x = "Job category",
     y = "Salary (USD)"
   ) +
-  scale_y_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 This boxplot illustrates the salary distribution across various job categories and experience levels, revealing key trends. High-paying categories include Data Engineering and Leadership and Management, with these fields showing higher median salaries and broader salary ranges. In contrast, categories like Data Analysis and Cloud and Database tend to have lower median salaries, indicating they are less lucrative. Machine Learning and AI stands out as a high-paying field with wide salary variability, reflecting its growing demand and value. Conversely, Data Quality and Operations has a narrower salary range, suggesting more standardized pay scales. Outliers are evident in several high-paying categories, such as Leadership and Data Engineering, where some employees earn significantly above the norm.
 
 Salaries also vary significantly by experience level. Executive-level roles command the highest salaries across nearly all job categories, followed by Senior-level roles. Entry-level salaries are the lowest, with smaller ranges, reflecting limited variability at the start of a career. Categories like Leadership and Management and Machine Learning and AI display a wide range of salaries across all experience levels, indicating diverse opportunities within these fields. These insights suggest that employees in lower-paying fields, such as Data Analysis, could benefit from upskilling into high-demand areas like Machine Learning or Data Engineering to improve earning potential.
 
-{r}
-#i am defining the salary ranges here
-data <- data %>%
-  mutate(salary_range = cut(
-    salary_in_usd,
-    breaks = c(0, 50000, 100000, 150000, 200000, 300000, 400000, Inf),
-    labels = c("$0–50k", "$50k–100k", "$100k–150k", "$150k–200k", "$200k–300k", "$300k–400k", "$400k+"),
-    include.lowest = TRUE
-  ))
+Which job titles are most commonly associated with executive-level experience?
 
-# Creating segmented bar chart
-ggplot(data, aes(x = job_category, fill = experience_level)) +
-  geom_bar(position = "fill") +
-  facet_wrap(~ salary_range, scales = "free_x") +
+{r}
+# Filter data for Executive-level experience
+executive_data <- data %>%
+  filter(experience_level == "Executive") %>%
+  count(job_title, name = "Frequency") # Count frequency of each job title
+
+# Bar chart for job titles with Executive-level experience
+ggplot(executive_data, aes(x = reorder(job_title, Frequency), y = Frequency, fill = job_title)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  coord_flip() + # Flip coordinates for easier readability
   labs(
-    title = "Influence of Experience Level on Salaries Across Job Categories",
-    x = "Job Category",
-    y = "Proportion",
-    fill = "Experience Level"
+    title = "Job Titles Associated with Executive-Level Experience",
+    x = "Job Title",
+    y = "Frequency",
+    fill = "Job Title"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    plot.title = element_text(size = 14, face = "bold"),
+    axis.text.x = element_text(size = 10),
+    axis.text.y = element_text(size = 10)
+  )
+
+This chart visualizes the frequency of job titles associated with executive-level experience in a given dataset. The x-axis represents the frequency count, while the y-axis lists various job titles. Prominent roles such as "Data Engineer," "Head of Data," and "Data Scientist" are highlighted at the top with the highest frequencies, indicating that these positions are most commonly linked with executive experience. The dominance of technical and leadership-focused roles reflects the demand for specialized expertise combined with management capabilities in data-driven fields.
+
+Lower-frequency job titles, such as "AI Scientist," "ETL Engineer," and "Principal Data Scientist," are also displayed but are less prevalent. These roles may represent niche positions or areas with fewer professionals at the executive level. The chart provides insight into the hierarchical structure of data-related careers and the titles most frequently occupied by individuals at advanced stages of their careers. It highlights the increasing importance of data leadership roles in modern organizations.
 
 What are the trends in salaries over the years?
 
@@ -165,36 +174,35 @@ This bubble chart examines the relationship between work settings, average salar
 
 The chart reveals that the In-person work setting has the largest bubble, indicating the highest number of employees, with an average salary of approximately $155,000, the highest among the three categories. The Hybrid work setting, by contrast, has the smallest bubble, representing fewer employees and the lowest average salary at about $140,000. The Remote work setting falls in between, with a medium-sized bubble and salaries that are higher than Hybrid but lower than In-person. These insights suggest that in-person roles tend to offer higher pay, potentially reflecting employer preferences or the nature of jobs requiring on-site presence.
 
-What is the relationship between company location and employee residence for different job roles?
+How have remote work and in-person work settings evolved over the years?
 
 {r}
-library(dplyr)
-library(circlize)
+# Summarize data to count employees per year and work setting
+summary_data <- data %>%
+  group_by(work_year, work_setting) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(work_year) %>%
+  mutate(proportion = count / sum(count))
 
-# Identify top 5 job roles
-top_job_roles <- data %>%
-  count(job_title, sort = TRUE) %>%
-  top_n(5, n) %>%
-  pull(job_title)
+# Stacked area chart
+ggplot(summary_data, aes(x = work_year, y = proportion, fill = work_setting)) +
+  geom_area(alpha = 0.8) +
+  scale_fill_manual(values = c("In-person" = "orange", "Remote" = "skyblue")) +
+  labs(
+    title = "Evolution of Remote and In-person Work Settings Over the Years",
+    x = "Year",
+    y = "Proportion of Work Setting",
+    fill = "Work Setting"
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  theme_minimal() +
+  theme(
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_text(size = 12),
+    plot.title = element_text(size = 14, face = "bold"),
+    legend.title = element_text(size = 12)
+  )
 
-# Filter data for these job roles
-filtered_data <- data %>%
-  filter(job_title %in% top_job_roles)
+This graph illustrates the shift in work settings from 2020 to 2024, with a clear focus on the balance between remote and in-person work. Initially, in 2020, in-person work was dominant, but as the pandemic took hold, there was a sharp increase in remote work, peaking around 2021. By 2021, a large proportion of the workforce transitioned to remote settings, reflecting the global response to COVID-19 restrictions. The graph shows that during this period, remote work rapidly overtook in-person work, and the trend remained strong through 2022.
 
-# Create a contingency table of company location vs. employee residence
-chord_data <- filtered_data %>%
-  count(company_location, employee_residence) %>%
-  rename(value = n)
-
-# Convert to a matrix for the chord diagram
-chord_matrix <- reshape2::acast(chord_data, company_location ~ employee_residence, value.var = "value", fill = 0)
-
-# Plot the chord diagram
-chordDiagram(chord_matrix, 
-             transparency = 0.5,
-             annotationTrack = "grid",
-             preAllocateTracks = 1)
-
-# Add title
-title("Relationship Between Company Location and Employee Residence for Key Job Roles")
-
+However, starting in 2022, the graph indicates a gradual return to in-person work, as companies began to reopen offices and adapt to new hybrid work models. By 2024, while remote work still holds a significant portion, in-person work has steadily increased, reflecting a shift toward hybrid or fully in-person models in many sectors. The graph captures the evolving work environment in response to both external factors like the pandemic and changing workplace preferences, with remote work declining slightly as in-person work gains ground again.
