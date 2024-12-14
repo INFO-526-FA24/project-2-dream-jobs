@@ -1,0 +1,113 @@
+---
+title: "Salary Trends and Factors in the Job Market"
+subtitle: "INFO 526 - Fall 2024 - Project 01: Analysis of salary data across job categories, experience levels, and company settings"
+author: 
+  - name: "Your Name"
+    affiliations:
+      - name: "College of Information Science, University of Arizona"
+description: "The goal of this project is to explore and analyze a comprehensive dataset of job salaries to uncover trends in salary variation by job category, experience levels, company size, and work settings. By analyzing this data, we aim to gain insights into the evolving job market and the factors that influence salaries over time."
+format:
+  html:
+    code-tools: true
+    code-overflow: wrap
+    code-line-numbers: true
+    embed-resources: true
+editor: visual
+code-annotations: hover
+execute:
+  warning: false
+---
+
+Introduction
+
+The data set used for this project spans from 2020 to 2024, combining data sourced from Kaggle (2020–2023) with 2024 data scraped from job websites like Monster and Indeed. Additionally, survey responses from students in the class provided insights into job opportunities of interest, aiding in data collection. 
+
+This project examines salary trends over the past four years, focusing on variations by job category, experience level, and company size. It also explores how work settings (remote vs. in-person) have evolved, their correlation with employee residence and salary levels, and general trends in job availability. By identifying hidden patterns, this analysis provides valuable insights into the evolving job market.
+
+{r}
+#| label: load-library
+#| echo: false
+# Load pacman package
+if (!requireNamespace("pacman", quietly = TRUE)) {
+    install.packages("pacman")  # Install pacman if not already installed
+}
+library(pacman)
+
+# Load necessary packages
+pacman::p_load(ggplot2, dplyr, ggrepel, gganimate, png, magick, ggridges,scales,circlize)
+
+{r}
+#| label: load-dataset
+#| message: false
+
+salary_data <- readr::read_csv('data/updated_data.csv')
+print(salary_data)
+summary(salary_data)
+
+The dataset includes information about salaries across different job categories, experience levels, company sizes, and work settings. It contains 50,000 rows and several variables including job title, years of experience, salary, company size, and work setting (remote or in-person).
+
+| variable            | class     | description                                           |
+|:---------------------|:----------|:------------------------------------------------------|
+| work_year           | double    | The year when the salary data was recorded            |
+| experience_level    | character | The experience level of the employee (e.g., Entry, Mid, Senior, Executive) |
+| employment_type     | character | Type of employment (e.g., Full-time, Part-time, Contract) |
+| job_title           | character | The specific job title of the employee                |
+| salary              | double    | The salary of the employee in local currency          |
+| salary_currency     | character | Currency used for the salary (e.g., USD, EUR, GBP)    |
+| salary_in_usd       | double    | The salary converted to USD                           |
+| employee_residence  | character | The location where the employee resides (e.g., Urban, Rural) |
+| work_setting        | character | Type of work setting (e.g., Remote, In-person, Hybrid)|
+| company_location    | character | Location of the company (e.g., City, Country)         |
+| company_size        | character | The size of the company (e.g., Small, Medium, Large)  |
+| job_category        | character | The category of the job (e.g., Engineering, Marketing)|
+
+
+
+Questions and Analysis Plan
+
+Question 1: How do salaries vary by job category across different experience levels?
+
+This question will help identify if certain job categories offer significantly higher salaries at different experience levels. We will compare salary distributions for different job categories by grouping the data based on experience level and visualize it using boxplots and bar plots.
+
+Question 2: Which job titles are most commonly associated with executive-level experience?
+
+By focusing on job titles associated with executive-level roles, we aim to uncover patterns related to seniority and compensation. We will filter the dataset for executive-level positions and analyze the most common titles, potentially using frequency counts and word clouds for visualization.
+
+Question 3: What are the trends in salaries over the years?
+
+This question explores how salaries have evolved over time, potentially revealing broader economic trends. We will aggregate salaries by year and visualize the trend using line plots, identifying key periods of salary growth or stagnation.
+
+Question 4: What are the salary trends by job category for different company sizes?
+
+To understand how company size affects salaries within job categories, we will analyze salaries across different company sizes. We will create comparative plots, like boxplots or grouped bar charts, to highlight salary differences across various company sizes for each job category.
+
+Question 5: How does the work setting correlate with employee residence and salary levels?
+
+This question explores whether work settings (remote vs in-person) are correlated with salary and residence location. We will analyze the distribution of salaries by work setting and residence, using scatter plots and boxplots to explore potential patterns.
+
+Question 6: How have remote work and in-person work settings evolved over the years?
+
+With the rise of remote work, understanding how it has affected salaries and job categories over the years is key. We will track changes in the proportion of remote vs in-person jobs over time, correlating it with salary changes, using line graphs and stacked area plots.
+
+
+External Data (anticipated):
+
+This project is expected to receive the external data through scraping the job websites like indeed monster etc.
+
+### Plan of Attack
+
+| Task Name                                          | Status      | Assignee       | Due        | Priority | Summary                                                                                                                                                                                              |
+|----------------------------------------------------|-------------|----------------|------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Create Proposal                                    | Done        | Whole Team     | Nov 14     | High     | Finalize and review analysis plan                                                                                                                                                                    |
+| Update proposal                                    | Done        | Team Members   | Nov 16     | High     | Incorporate feedback and finalize the proposal                                                                                                                                                        |
+| Write-up: Introduction & basic structure           | Done        | Assigned Team  | Nov 18     | Medium   | Create the introduction section and structure of the proposal, add necessary headings.                                                                                                                |
+| Write-up: Dataset loading and data preparation     | Done        | Data Analyst   | Nov 20     | High     | Load and preprocess the dataset, handle missing values, check for outliers.                                                                                                                           |
+| Question 1: Analysis, Visualization and Discussion | Done        | Analyst 1      | Nov 22     | High     | Analyze salary variation by job category and experience level. Create visualizations such as bar plots or scatter plots. Write up findings.                                                           |
+| Question 2: Analysis, Visualization and Discussion | Done        | Analyst 2      | Nov 24     | High     | Identify most common job titles for executive-level experience, visualize with pie charts or bar charts. Write up findings.                                                                          |
+| Question 3: Analysis, Visualization and Discussion | Done        | Analyst 3      | Nov 26     | High     | Analyze salary trends over the years, create line plots to visualize trends across time. Write up findings.                                                                                           |
+| Question 4: Analysis, Visualization and Discussion | Done        | Analyst 4      | Nov 28     | High     | Analyze salary trends by job category for different company sizes, use grouped bar plots. Write up findings.                                                                                         |
+| Question 5: Analysis, Visualization and Discussion | Done        | Analyst 5      | Nov 30     | High     | Analyze the correlation between work settings, employee residence, and salary. Create scatter plots or heatmaps. Write up findings.                                                                   |
+| Question 6: Analysis, Visualization and Discussion | Done        | Analyst 6      | Dec 2      | High     | Analyze the evolution of remote and in-person work settings over the years. Visualize with line charts or bar charts. Write up findings.                                                              |
+| Final Report: Summary & Conclusion                 | Done        | Whole Team     | Dec 5      | High     | Finalize and compile the results, create conclusion based on the analysis. Write the final summary report.                                                                                            |
+| Final Internal Review and Modifications            | Done        | Whole Team     | Dec 7      | High     | Review all sections, implement feedback, and ensure all sections are cohesive and polished. Finalize the report for submission.                                                                      |
+| Submission                                         | Done        | Whole Team     | Dec 13     | High     | Submit the final report and deliverables.                                                                                                                                                            |
