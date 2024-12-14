@@ -1,11 +1,11 @@
 ---
-title: "Dream jobs - analysis on the job market in US"
-subtitle: "INFO 526 - Fall 2024 - Project 02: analysis on the job market in US"
+title: "Salary Trends and Factors in the Job Market"
+subtitle: "INFO 526 - Fall 2024 - Project 01: Analysis of salary data across job categories, experience levels, and company settings"
 author: 
-  - name: "DreamJobs"
+  - name: "Your Name"
     affiliations:
       - name: "College of Information Science, University of Arizona"
-description: "The primary goal of this project is to conduct a comprehensive analysis of the U.S. job market, focusing on identifying trends, skills, and career pathways relevant to students graduating from our course. This analysis will provide insights into current job demand, salary expectations, required skills, and industry-specific opportunities, ultimately supporting students in making informed career choices"
+description: "The goal of this project is to explore and analyze a comprehensive dataset of job salaries to uncover trends in salary variation by job category, experience levels, company size, and work settings. By analyzing this data, we aim to gain insights into the evolving job market and the factors that influence salaries over time."
 format:
   html:
     code-tools: true
@@ -16,78 +16,98 @@ editor: visual
 code-annotations: hover
 execute:
   warning: false
-editor_options: 
-  markdown: 
-    wrap: 72
 ---
-| Variable           | Class      | Description                                                                                               |
-|--------------------|------------|-----------------------------------------------------------------------------------------------------------|
-| id                 | double     | Job ID                                                                                                    |
-| Job_title          | character  | Title of the job                                                                                          |
-| experience         | character  | The required or preferred years of experience for the job.                                                |
-| Qualifications     | character  | The educational qualifications needed for the job                                                         |
-| Salary Range       | character  | The range of salaries or compensation offered for the position.                                           |
-| Location           | character  | The city or area where the job is located.                                                                |
-| Work Type          | character  | The type of employment (e.g., full-time, part-time, contract)                                             |
-| Job Posting Date   | character  | The date when the job posting was made public                                                             |
-| Preference         | character  | Special preferences or requirements for applicants (e.g., Only Male or Female, remote, hybrid)            |
-| Role               | character  | The role or category of the job (e.g., software developer, marketing manager).                            |
-| Job Portal         | character  | The platform or website where the job was posted.                                                         |
-| Benefits           | character  | Information about benefits offered with the job (e.g., health insurance, retirement plans).               |
-| Skills             | character  | The skills or qualifications required for the job.                                                        |
-| Responsibilities   | character  | Specific responsibilities and duties associated with the job.                                             |
-| Company Name       | character  | The name of the hiring company.                                                                           |
-| Company Profile    | character  | A brief overview of the company's background and mission                                                  |
 
-Methodology:
+Introduction
 
-Data Collection:
+The data set used for this project spans from 2020 to 2024, combining data sourced from Kaggle (2020–2023) with 2024 data scraped from job websites like Monster and Indeed. Additionally, survey responses from students in the class provided insights into job opportunities of interest, aiding in data collection. 
 
-We will gather real-time job market data from popular platforms, including LinkedIn, Indeed, Glassdoor, and Monster. This data will include job openings, descriptions, required skills, salary ranges, and geographical distribution. For web scraping, we plan to use tools such as rvest for static content and RSelenium for platforms with dynamic or interactive content.
+This project examines salary trends over the past four years, focusing on variations by job category, experience level, and company size. It also explores how work settings (remote vs. in-person) have evolved, their correlation with employee residence and salary levels, and general trends in job availability. By identifying hidden patterns, this analysis provides valuable insights into the evolving job market.
 
-Additionally, a survey will be administered to students to capture their career expectations, including preferred job titles, industries, and locations. This combined approach will allow us to analyze market trends alongside students' aspirations.
+{r}
+#| label: load-library
+#| echo: false
+# Load pacman package
+if (!requireNamespace("pacman", quietly = TRUE)) {
+    install.packages("pacman")  # Install pacman if not already installed
+}
+library(pacman)
 
-Data Analysis:
+# Load necessary packages
+pacman::p_load(ggplot2, dplyr, ggrepel, gganimate, png, magick, ggridges,scales,circlize)
 
-The data will be processed and analyzed to identify key trends and common job requirements in various fields related to the course.
-Machine learning and natural language processing techniques might be employed to extract insights, such as in-demand skills, emerging job roles, and location-based salary expectations.
+{r}
+#| label: load-dataset
+#| message: false
 
-Expected Outcomes:
+salary_data <- readr::read_csv('data/updated_data.csv')
+print(salary_data)
+summary(salary_data)
 
-A detailed report highlighting job market trends and insights tailored to the expectations and aspirations of graduating students.
-Visualizations and dashboards for easy interpretation of data trends and projections for specific roles and industries.
-Recommendations for students on aligning their skills and experiences with market demands, based on the findings from both scraped data and survey responses.
+The dataset includes information about salaries across different job categories, experience levels, company sizes, and work settings. It contains 50,000 rows and several variables including job title, years of experience, salary, company size, and work setting (remote or in-person).
 
-Variables to be Created:
+| variable            | class     | description                                           |
+|:---------------------|:----------|:------------------------------------------------------|
+| work_year           | double    | The year when the salary data was recorded            |
+| experience_level    | character | The experience level of the employee (e.g., Entry, Mid, Senior, Executive) |
+| employment_type     | character | Type of employment (e.g., Full-time, Part-time, Contract) |
+| job_title           | character | The specific job title of the employee                |
+| salary              | double    | The salary of the employee in local currency          |
+| salary_currency     | character | Currency used for the salary (e.g., USD, EUR, GBP)    |
+| salary_in_usd       | double    | The salary converted to USD                           |
+| employee_residence  | character | The location where the employee resides (e.g., Urban, Rural) |
+| work_setting        | character | Type of work setting (e.g., Remote, In-person, Hybrid)|
+| company_location    | character | Location of the company (e.g., City, Country)         |
+| company_size        | character | The size of the company (e.g., Small, Medium, Large)  |
+| job_category        | character | The category of the job (e.g., Engineering, Marketing)|
 
-as we are expecting web scraping here, we might add few new variables as we try to answer the questions
 
-External Data:
 
-This project is expected to have scrapped data from various websites and survey forms  to get a comprehensive view of both student expectations and actual job market trends, which is ideal for a meaningful analysis.
+Questions and Analysis Plan
 
-## Condensed Plan of Attack
+Question 1: How do salaries vary by job category across different experience levels?
 
-| Task Name                                          | Status | Assignee         | Due       | Priority | Summary                                                                                                                              |
-|----------------------------------------------------|--------|-------------------|-----------|----------|--------------------------------------------------------------------------------------------------------------------------------------|
-| **Week 1: Project Proposal and Initial Setup**     |        | Whole Team       | Nov 14    | High     | Finalize project proposal, objectives, and data sources. Outline tasks for each team member.                                         |
-| Proposal Finalization                              |        | Megha, Ram       | Nov 16    | High     | Review and incorporate feedback into the project proposal, ensuring clarity on objectives and methods.                               |
-| Research Data Sources and Survey Design            |        | Sohan, Naveen    | Nov 16    | High     | Confirm approach for each job platform. Create survey questions to gather students' expected job titles and career preferences.      |
+This question will help identify if certain job categories offer significantly higher salaries at different experience levels. We will compare salary distributions for different job categories by grouping the data based on experience level and visualize it using boxplots and bar plots.
 
-| **Week 2: Data Collection Begins**                 |        | Whole Team       | Nov 21    | High     | Start collecting data from accessible APIs, aggregators, or scraping tools (if permissible). Distribute the survey to students.     |
-| Survey Distribution and Initial Response Tracking  |        | Sohan            | Nov 22    | High     | Distribute survey to students, and monitor response rate to ensure sufficient data for analysis.                                    |
-| Data Collection: Job Platforms                     |        | Megha, Naveen    | Nov 23    | High     | Implement approved APIs or scraping tools for LinkedIn, Indeed, Monster, and Glassdoor; ensure data is stored securely.             |
+Question 2: Which job titles are most commonly associated with executive-level experience?
 
-| **Week 3: Data Cleaning & Preprocessing**          |        | Whole Team       | Nov 28    | High     | Clean and preprocess data, handling duplicates, missing values, and standardizing attributes (job titles, skills, etc.).            |
-| Survey Data Compilation                            |        | Sohan, Ram       | Nov 29    | Medium   | Collect survey responses and prepare data for integration with job market data.                                                     |
-| Data Preprocessing: Job Platform Data              |        | Sohan, Naveen    | Nov 30    | High     | Standardize job titles, handle missing data, and check for consistency across job platform data sources.                            |
+By focusing on job titles associated with executive-level roles, we aim to uncover patterns related to seniority and compensation. We will filter the dataset for executive-level positions and analyze the most common titles, potentially using frequency counts and word clouds for visualization.
 
-| **Week 4: Analysis and Initial Findings**          |        | Whole Team       | Dec 5     | High     | Begin exploratory data analysis to identify job trends, skill requirements, and salary distributions.                               |
-| Exploratory Data Analysis (EDA)                    |        | Sohan, Ram       | Dec 6     | Medium   | Create visualizations for job title frequency, skill requirements, and salary trends.                                               |
-| Survey Data Analysis                               |        | Megha, Naveen    | Dec 7     | Medium   | Analyze survey data for top job titles, skills, and industries desired by students, and identify any gaps with job market data.     |
+Question 3: What are the trends in salaries over the years?
 
-| **Week 5: Final Analysis and Report Preparation**  |        | Whole Team       | Dec 12    | High     | Synthesize findings, finalize visualizations, and prepare the report and presentation.                                              |
-| Report Drafting and Visualizations                 |        | Megha, Ram       | Dec 13    | High     | Write the report, including background, methodology, findings, and conclusions relevant to students’ job expectations.              |
-| Presentation Preparation                           |        | Sohan, Naveen    | Dec 14    | High     | Create a presentation summarizing key findings, insights, and recommendations.                                                      |
-| Final Review and Adjustments                       |        | Whole Team       | Dec 15    | High     | Conduct a full review, incorporate final edits, and finalize both the report and presentation.                                      |
+This question explores how salaries have evolved over time, potentially revealing broader economic trends. We will aggregate salaries by year and visualize the trend using line plots, identifying key periods of salary growth or stagnation.
 
+Question 4: What are the salary trends by job category for different company sizes?
+
+To understand how company size affects salaries within job categories, we will analyze salaries across different company sizes. We will create comparative plots, like boxplots or grouped bar charts, to highlight salary differences across various company sizes for each job category.
+
+Question 5: How does the work setting correlate with employee residence and salary levels?
+
+This question explores whether work settings (remote vs in-person) are correlated with salary and residence location. We will analyze the distribution of salaries by work setting and residence, using scatter plots and boxplots to explore potential patterns.
+
+Question 6: How have remote work and in-person work settings evolved over the years?
+
+With the rise of remote work, understanding how it has affected salaries and job categories over the years is key. We will track changes in the proportion of remote vs in-person jobs over time, correlating it with salary changes, using line graphs and stacked area plots.
+
+
+External Data (anticipated):
+
+This project is expected to receive the external data through scraping the job websites like indeed monster etc.
+
+### Plan of Attack
+
+| Task Name                                          | Status      | Assignee       | Due        | Priority | Summary                                                                                                                                                                                              |
+|----------------------------------------------------|-------------|----------------|------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Create Proposal                                    | Done        | Whole Team     | Nov 14     | High     | Finalize and review analysis plan                                                                                                                                                                    |
+| Update proposal                                    | Done        | Team Members   | Nov 16     | High     | Incorporate feedback and finalize the proposal                                                                                                                                                        |
+| Write-up: Introduction & basic structure           | Done        | Assigned Team  | Nov 18     | Medium   | Create the introduction section and structure of the proposal, add necessary headings.                                                                                                                |
+| Write-up: Dataset loading and data preparation     | Done        | Data Analyst   | Nov 20     | High     | Load and preprocess the dataset, handle missing values, check for outliers.                                                                                                                           |
+| Question 1: Analysis, Visualization and Discussion | Done        | Analyst 1      | Nov 22     | High     | Analyze salary variation by job category and experience level. Create visualizations such as bar plots or scatter plots. Write up findings.                                                           |
+| Question 2: Analysis, Visualization and Discussion | Done        | Analyst 2      | Nov 24     | High     | Identify most common job titles for executive-level experience, visualize with pie charts or bar charts. Write up findings.                                                                          |
+| Question 3: Analysis, Visualization and Discussion | Done        | Analyst 3      | Nov 26     | High     | Analyze salary trends over the years, create line plots to visualize trends across time. Write up findings.                                                                                           |
+| Question 4: Analysis, Visualization and Discussion | Done        | Analyst 4      | Nov 28     | High     | Analyze salary trends by job category for different company sizes, use grouped bar plots. Write up findings.                                                                                         |
+| Question 5: Analysis, Visualization and Discussion | Done        | Analyst 5      | Nov 30     | High     | Analyze the correlation between work settings, employee residence, and salary. Create scatter plots or heatmaps. Write up findings.                                                                   |
+| Question 6: Analysis, Visualization and Discussion | Done        | Analyst 6      | Dec 2      | High     | Analyze the evolution of remote and in-person work settings over the years. Visualize with line charts or bar charts. Write up findings.                                                              |
+| Final Report: Summary & Conclusion                 | Done        | Whole Team     | Dec 5      | High     | Finalize and compile the results, create conclusion based on the analysis. Write the final summary report.                                                                                            |
+| Final Internal Review and Modifications            | Done        | Whole Team     | Dec 7      | High     | Review all sections, implement feedback, and ensure all sections are cohesive and polished. Finalize the report for submission.                                                                      |
+| Submission                                         | Done        | Whole Team     | Dec 13     | High     | Submit the final report and deliverables.                                                                                                                                                            |
