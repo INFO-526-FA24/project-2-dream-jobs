@@ -323,3 +323,10 @@ Limitations:While the dataset is extensive, it primarily focuses on the data sci
 
 Conclusion:This project demonstrates the power of data analysis in uncovering patterns and trends in the job market. By understanding how various factors influence salaries and work preferences, stakeholders can make informed decisions that benefit both individuals and organizations. The results also reflect broader trends in the modern workforce, emphasizing the importance of adaptability and innovation in navigating the evolving job landscape. Despite limitations, the findings provide a strong foundation for understanding the dynamics of the job market in a rapidly changing world.
 
+References
+Kaggle. (2020–2023). Job Market Trends, Salary Data, Job Titles, and Company Sizes. Retrieved from https://www.kaggle.com/datasets/murilozangari/jobs-and-salaries-in-data-field-2024
+
+Monster and Indeed. (2024). Job Availability, Salaries, and Required Skills for Various Positions. Data collected from job listings on Monster and Indeed websites.
+
+Student Survey Responses. (2024). Survey on Career Interests and Job Opportunities. Collected by INFO 526 students for academic research purposes.
+
