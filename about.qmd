@@ -1,0 +1,17 @@
+```{r}
+title: "About"
+format: html
+editor: visual
+
+
+```
+
+This project was developed by Dream Jobs For [INFO 526 - Data Analysis and Visualization](https://datavizaz.org/) at the University of Arizona, taught by Professor Anna Lech. The team is comprised of the following team members.
+
+-   Team member 1: Meghashree N, MSIS.
+
+-   Team member 2: Sohan Shankar Arasavilli, MSIS.
+
+-   Team member 3: Ram Teja Vangari, MSIS.
+
+-   Team member 4: Naveen k saragadam, MSIS.
